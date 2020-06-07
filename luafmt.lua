@@ -16,7 +16,8 @@ setmetatable(_G, {
 --------------------------------------------------------------------------------
 
 local COLUMN_LIMIT = 80
-local TAB_COLUMNS = 4
+local TAB_COLUMNS = 2
+local INDENT = string.rep(" ", TAB_COLUMNS)
 
 --------------------------------------------------------------------------------
 
@@ -635,7 +636,7 @@ local function renderTokens(tree, column, indent)
 			if #finalLine < finalLineLength then
 				finalLineLength = #finalLine:gsub(
 					"\t",
-					string.rep(" ", TAB_COLUMNS)
+          INDENT
 				)
 			end
 			out = out .. renderTokens(child, finalLineLength, indent)
@@ -699,7 +700,7 @@ local function renderTokens(tree, column, indent)
 			if #finalLine < finalLineLength then
 				finalLineLength = #finalLine:gsub(
 					"\t",
-					string.rep(" ", TAB_COLUMNS)
+          INDENT
 				)
 			end
 			local result = renderTokens(child, finalLineLength, indent)
@@ -811,6 +812,7 @@ end
 local tokens = filterBlanks(tokenize(file:read("*all")))
 local tree = groupTokens(tokens)
 local rendered = (renderTokens(tree, 0, 0))
+rendered = rendered:gsub("\t", INDENT)
 
 file:close()
 
